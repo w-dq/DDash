@@ -6,17 +6,12 @@ from utils import Header
 import pandas as pd
 import pathlib
 
-
 def create_layout(app):
-    # Page layouts
-
     layout = html.Div(
         [
             html.Div([Header(app)]),
-            # page 1
             html.Div(
                 [
-                    # Row 3
                     html.Div(
                         [
                             html.Div(

@@ -20,15 +20,14 @@ def get_header(app):
                             id="learn-more-button",
                             style={"margin-left": "-10px"},
                         ),
-                        href="mailto:email@example.com?subject=DaqianDashboard",
+                        href="mailto:daqian.wu@proton.me?subject=DaqianDashboard",
                     ),
                     html.A(
                         html.Button("Source Code", 
                             id="learn-more-button"
                     ),
+                        href="https://github.com/w-dq/DDash"
                     ),
-                    # TODO: run bash file
-                    # href="https://plotly.com/get-demo/",
                 ],
                 className="row",
             )
