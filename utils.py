@@ -60,9 +60,23 @@ def make_dash_table(df):
     table = []
     for index, row in df.iterrows():
         html_row = []
-        for i in range(len(row)):
+        for i in range(0,len(row)):
             html_row.append(html.Td([row[i]]))
         table.append(html.Tr(html_row))
+    return table
+
+def make_dash_table_yc(df):
+    """ Return a dash definition of an HTML table for a Pandas dataframe """
+    header = [html.Th(col) for col in df.columns[1:-1]]
+    header_row = html.Tr(header)
+
+    table = []
+    for index, row in df.iterrows():
+        html_row = []
+        for i in range(1,len(row)-1):
+            html_row.append(html.Td([row[i]]))
+        table.append(html.Tr(html_row))
+    table = [header_row] + table
     return table
 
 def remove_namespace(tag):

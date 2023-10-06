@@ -1,11 +1,13 @@
 import dash
 from dash import html, dcc
 from dash.dependencies import Input, Output, State
+import plotly.graph_objs as go
+
 from pages import (
     overview,
     yield_curve,
 )
-
+import pandas as pd
 from proccess import update_yield_curve_data
 
 app = dash.Dash(
@@ -37,11 +39,53 @@ def yield_curve_update(n_clicks):
         print("No Clicks")
         return  button_style
     res = update_yield_curve_data(["2023"])
-    print("res")
-    button_style['background-color'] = '#009b9d'
-    button_style['pointer-events'] = 'none'
-    print("Finished Updating Yield Curve")
+    if res:
+        button_style['background-color'] = '#009b9d'
+        button_style['pointer-events'] = 'none'
+        print("Finished Updating Yield Curve")
+    else:
+        button_style['background-color'] = '#ed1c24'
+        button_style['pointer-events'] = 'none'
+        print("Failed Updating Yield Curve")
     return button_style
+
+@app.callback(
+    Output('graph-yc', 'figure'),
+    Input('dropdown-yc', 'value')
+)
+def rerender_yc_graph(selected_date):
+    df_yc = pd.read_csv("./data/treasury_yield_curve.csv")
+
+    filtered_df = df_yc[df_yc['NEW_DATE'].isin(selected_date)]
+    x_labels = df_yc.columns[2:-1]
+
+    yc_plot_data = []
+    for index, row in filtered_df.iterrows():
+        g = go.Scatter(
+            x = x_labels,
+            y = df_yc.iloc[index][2:-1],
+            name=row["NEW_DATE"]
+        )
+        yc_plot_data.append(g)
+    return {"data": yc_plot_data}
+
+@app.callback(
+    Output('graph-ts', 'figure'),
+    Input('dropdown-ts', 'value')
+)
+def rerender_yc_graph(selected_cols):
+    df_yc = pd.read_csv("./data/treasury_yield_curve.csv")
+    df_yc['NEW_DATE'] = pd.to_datetime(df_yc['NEW_DATE'])
+
+    ts_plot_data = []
+    for col in selected_cols:
+        g = go.Scatter(
+            x = df_yc['NEW_DATE'],
+            y = df_yc[col],
+            name = col
+        )
+        ts_plot_data.append(g)
+    return {"data": ts_plot_data}
 
 if __name__ == "__main__":
     app.run_server(debug=True, port=8070)

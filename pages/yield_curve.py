@@ -1,49 +1,109 @@
 from dash import html, dcc
 import plotly.graph_objs as go
 
-from utils import Header
-
+from utils import Header, make_dash_table_yc
 import pandas as pd
 import pathlib
 
 def create_layout(app):
+    df_yc = pd.read_csv("./data/treasury_yield_curve.csv")
+    df_yc = df_yc.iloc[::-1]
+    
+    dropdown_dates = [{'label': i, 'value': i} for i in df_yc["NEW_DATE"]]
+    dropdown_maturities = [ {'label': i, 'value': i} for i in df_yc.columns[2:-1]]
+
+    df_yc_short = df_yc.iloc[:10]
+
+    yc_plot_data = [
+        go.Scatter(
+            x = df_yc.columns[2:-1],
+            y = df_yc.iloc[0][2:-1]
+        )
+    ]
+
     layout = html.Div(
         [
             html.Div([Header(app)]),
             html.Div(
-                [
+                [   
                     html.Div(
                         [
-                            html.Div(
-                                [
-                                    html.H5("Product Summary"),
-                                    html.Br([]),
-                                    html.P(
-                                        "\
-                                    As the industry’s first index fund for individual investors, \
-                                    the Calibre Index Fund is a low-cost way to gain diversified exposure \
-                                    to the U.S. equity market. The fund offers exposure to 500 of the \
-                                    largest U.S. companies, which span many different industries and \
-                                    account for about three-fourths of the U.S. stock market’s value. \
-                                    The key risk for the fund is the volatility that comes with its full \
-                                    exposure to the stock market. Because the Calibre Index Fund is broadly \
-                                    diversified within the large-capitalization market, it may be \
-                                    considered a core equity holding in a portfolio.",
-                                        style={"color": "#ffffff"},
-                                        className="row",
-                                    ),
-                                ],
-                                className="product",
-                            )
-                        ],
-                        className="row",
+                            html.Label('Select Dates:'),
+                            dcc.Dropdown(
+                                id = 'dropdown-yc',
+                                options = dropdown_dates,
+                                value=[df_yc.iloc[0][1]],
+                                multi = True
+                            ),
+                            html.Br([])
+                        ]
                     ),
-                    
+                    html.Div(
+                                [
+                                    dcc.Graph(
+                                        id="graph-yc",
+                                        figure={
+                                            "data": yc_plot_data,
+                                            "layout": go.Layout(
+                                                title="Yield Curve",
+                                                autosize=True,
+                                                height=400,
+                                                xaxis={
+                                                    "autorange": True,
+                                                    "showgrid": True,
+                                                },
+                                                yaxis={
+                                                    "autorange": True,
+                                                    "showgrid": True,
+                                                }
+                                            )
+                                        }
+                                    )
+                                ]
+                            ),
+                    html.Div(
+                        [
+                            html.Br([]),
+                            html.Label('Select Maturities:'),
+                            dcc.Dropdown(
+                                id = 'dropdown-ts',
+                                options = dropdown_maturities,
+                                value=['BC_1MONTH'],
+                                multi = True
+                            ),
+                            html.Br([])
+                        ]
+                    ),
+                    html.Div(
+                                [
+                                    dcc.Graph(
+                                        id="graph-ts",
+                                        figure={
+                                            "data": yc_plot_data,
+                                            "layout": go.Layout(
+                                                title="Term Structure",
+                                                autosize=True,
+                                                height=400,
+                                                xaxis={
+                                                    "autorange": True,
+                                                    "showgrid": True,
+                                                },
+                                                yaxis={
+                                                    "autorange": True,
+                                                    "showgrid": True,
+                                                }
+                                            )
+                                        }
+                                    )
+                                ]
+                            ),
+                    html.Br([]),
+                    html.Label('Daily Treasury Par Yield Curve Rates (Last 10 Days)'),
+                    html.Table(make_dash_table_yc(df_yc_short)),
                 ],
                 className="sub_page",
             ),
         ],
         className="page",
     )
-    
     return layout
