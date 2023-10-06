@@ -21,19 +21,25 @@ def create_layout(app):
                         [
                             html.Div(
                                 [
-                                    html.H5("Product Summary"),
+                                    html.H5("Overview"),
                                     html.Br([]),
                                     html.P(
-                                        "\
-                                    As the industry’s first index fund for individual investors, \
-                                    the Calibre Index Fund is a low-cost way to gain diversified exposure \
-                                    to the U.S. equity market. The fund offers exposure to 500 of the \
-                                    largest U.S. companies, which span many different industries and \
-                                    account for about three-fourths of the U.S. stock market’s value. \
-                                    The key risk for the fund is the volatility that comes with its full \
-                                    exposure to the stock market. Because the Calibre Index Fund is broadly \
-                                    diversified within the large-capitalization market, it may be \
-                                    considered a core equity holding in a portfolio.",
+                                        "This is a dashboard for data monitoring, it currently has only yield curve and Fed Funds target data from FRED and treasury.gov",
+                                        style={"color": "#ffffff"},
+                                        className="row",
+                                    ),
+                                    html.P(
+                                        "To use the Yield Curve page:",
+                                        style={"color": "#ffffff"},
+                                        className="row",
+                                    ),
+                                    html.P(
+                                        "- For the first time or to update data, click the 'Update Yield Curve Data' button and wait for it to turn green.",
+                                        style={"color": "#ffffff"},
+                                        className="row",
+                                    ),
+                                    html.P(
+                                        "- This would take about 5 seconds.",
                                         style={"color": "#ffffff"},
                                         className="row",
                                     ),
