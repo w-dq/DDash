@@ -3,10 +3,34 @@ import csv
 import xml.etree.ElementTree as ET
 import pandas as pd
 from utils import remove_namespace
-
+import requests
+from datetime import date, timedelta
 
 def update_yield_curve_data(year_list=[]):
-    # url = "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_yield_curve&field_tdr_date_value_month=202310"
+
+    previous_day = date.today() - timedelta(days=2)
+    previous_day_str = previous_day.strftime("%Y-%m-%d")
+
+    download_path = './data/DFEDTARU.csv'
+    url = f"https://fred.stlouisfed.org/graph/fredgraph.csv?id=DFEDTARU&cosd={previous_day_str}"
+    response = requests.get(url)
+    if response.status_code == 200:
+        with open(download_path, "wb") as file:
+            file.write(response.content)
+        print(f"File downloaded successfully as '{download_path}'")
+    else:
+        print(f"Failed to download the file. Status code: {response.status_code}")
+
+    download_path = './data/DFEDTARL.csv'
+    url = f"https://fred.stlouisfed.org/graph/fredgraph.csv?id=DFEDTARL&cosd={previous_day_str}"
+    response = requests.get(url)
+    if response.status_code == 200:
+        with open(download_path, "wb") as file:
+            file.write(response.content)
+        print(f"File downloaded successfully as '{download_path}'")
+    else:
+        print(f"Failed to download the file. Status code: {response.status_code}")
+
     yc_data = []
     base_url = "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_yield_curve&field_tdr_date_value="
     for y in year_list:

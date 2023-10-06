@@ -73,7 +73,7 @@ def rerender_yc_graph(selected_date):
     Output('graph-ts', 'figure'),
     Input('dropdown-ts', 'value')
 )
-def rerender_yc_graph(selected_cols):
+def rerender_ts_graph(selected_cols):
     df_yc = pd.read_csv("./data/treasury_yield_curve.csv")
     df_yc['NEW_DATE'] = pd.to_datetime(df_yc['NEW_DATE'])
 
@@ -86,6 +86,24 @@ def rerender_yc_graph(selected_cols):
         )
         ts_plot_data.append(g)
     return {"data": ts_plot_data}
+
+@app.callback(
+    Output('graph-sp', 'figure'),
+    Input('dropdown-sp-1', 'value'),
+    Input('dropdown-sp-2', 'value')
+)
+def rerender_sp_graph(col_1,col_2):
+    df_yc = pd.read_csv("./data/treasury_yield_curve.csv")
+    df_yc['NEW_DATE'] = pd.to_datetime(df_yc['NEW_DATE'])
+    df_yc['SPREAD'] = df_yc[col_2] - df_yc[col_1]
+    sp_plot_data = [
+        go.Scatter(
+            x = df_yc['NEW_DATE'],
+            y = df_yc['SPREAD'],
+            name = 'Spread'
+        )
+    ]
+    return {"data": sp_plot_data}
 
 if __name__ == "__main__":
     app.run_server(debug=True, port=8070)
