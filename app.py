@@ -12,7 +12,7 @@ from proccess import update_yield_curve_data
 
 app = dash.Dash(
     __name__, meta_tags=[{"name": "viewport", "content": "width=device-width"}],
-    # suppress_callback_exceptions=True
+    suppress_callback_exceptions=True
 )
 app.title = "Daqian Dashboard"
 
@@ -29,16 +29,17 @@ def display_page(pathname):
 
 @app.callback(
     Output('update-yc', 'style'),
+    Input('dropdown-yc-project', 'value'),
     Input('update-yc', 'n_clicks'),
     prevent_initial_call=True
 )
-def yield_curve_update(n_clicks):
+def yield_curve_update(years, n_clicks):
     print("Updating Yield Curve")
     button_style = dict()
     if n_clicks is None:
         print("No Clicks")
         return  button_style
-    res = update_yield_curve_data(["2023"])
+    res = update_yield_curve_data(years)
     if res:
         button_style['background-color'] = '#009b9d'
         button_style['pointer-events'] = 'none'

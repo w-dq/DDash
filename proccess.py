@@ -7,7 +7,6 @@ import requests
 from datetime import date, timedelta
 
 def update_yield_curve_data(year_list=[]):
-
     previous_day = date.today() - timedelta(days=2)
     previous_day_str = previous_day.strftime("%Y-%m-%d")
 
@@ -57,7 +56,8 @@ def update_yield_curve_data(year_list=[]):
 
     if yc_data:
         df = pd.DataFrame(yc_data)
-        df.to_csv("./data/treasury_yield_curve.csv")
+        df_sorted = df.sort_values(by='NEW_DATE', ascending=False)
+        df_sorted.to_csv("./data/treasury_yield_curve.csv")
     else:
         return False
     return True

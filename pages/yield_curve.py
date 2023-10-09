@@ -18,7 +18,6 @@ def create_layout(app):
                                 ], style = {'color':"#ed1c24"}),
                             ])
         return layout
-    df_yc = df_yc.iloc[::-1]
 
     target_upper = df_fedtaru.iloc[-1]["DFEDTARU"]
     target_lower = df_fedtarl.iloc[-1]["DFEDTARL"]
@@ -35,7 +34,9 @@ def create_layout(app):
                 [   
                     html.Div(
                         [
-                            html.Label(f"Federal Funds Target Range: Lower Limit {target_lower}, Upper Limit {target_upper}")
+                            html.Label(f"Federal Funds Target Range: \
+                                        Overnight Reverse Repurchase rate (ONRRP) {target_lower}, \
+                                        Interest on Excess Reserves (IOER) {target_upper}")
                         ], style = {'fontSize':18}
                     ), 
                     html.Div(

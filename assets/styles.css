@@ -160,6 +160,14 @@ li {
   background: #006f4e;
   color: #ffffff;
 }
+.project-container{
+  position: relative;
+  height: 15%;
+  padding: 30px;
+  margin-bottom: 25px;
+  border-radius: 5px;
+  border: 1px solid #006f4e;
+}
 .full-view-link {
   background-color: #006f4e;
   color: white !important;
