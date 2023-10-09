@@ -29,16 +29,22 @@ def display_page(pathname):
 
 @app.callback(
     Output('update-yc', 'style'),
+    Output("yc_n_clicks-store", "data"),
     Input('dropdown-yc-project', 'value'),
     Input('update-yc', 'n_clicks'),
+    Input("yc_n_clicks-store", "data"),
     prevent_initial_call=True
 )
-def yield_curve_update(years, n_clicks):
+def yield_curve_update(years, n_clicks, prev_clicks):
     print("Updating Yield Curve")
     button_style = dict()
-    if n_clicks is None:
+    if (n_clicks == prev_clicks) or (n_clicks is None):
         print("No Clicks")
-        return  button_style
+        return  button_style, n_clicks
+    if not years:
+        print("No Years")
+        return  button_style, n_clicks
+
     res = update_yield_curve_data(years)
     if res:
         button_style['background-color'] = '#009b9d'
@@ -48,7 +54,7 @@ def yield_curve_update(years, n_clicks):
         button_style['background-color'] = '#ed1c24'
         button_style['pointer-events'] = 'none'
         print("Failed Updating Yield Curve")
-    return button_style
+    return button_style, n_clicks
 
 @app.callback(
     Output('graph-yc', 'figure'),
@@ -105,6 +111,8 @@ def rerender_sp_graph(col_1,col_2):
         )
     ]
     return {"data": sp_plot_data}
+
+
 
 if __name__ == "__main__":
     app.run_server(debug=True, port=8070)

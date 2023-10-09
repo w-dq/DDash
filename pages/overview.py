@@ -60,7 +60,8 @@ def create_layout(app):
                                 html.Button("Update Yield Curve Data", 
                                     id="update-yc",
                                     style={'display': 'inline-block'},
-                                )
+                                ),
+                                dcc.Store(id="yc_n_clicks-store", data=0)
                             ],style={'display': 'inline-block', 'width':'50%'})
                         ], className = "project-container")
                 ],
