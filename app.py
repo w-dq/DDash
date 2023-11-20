@@ -6,6 +6,7 @@ import plotly.graph_objs as go
 from pages import (
     overview,
     yield_curve,
+    vanilla_option_pricing
 )
 import pandas as pd
 from proccess import update_yield_curve_data
@@ -24,6 +25,8 @@ app.layout = html.Div(
 def display_page(pathname):
     if pathname == "/daqian-dashboard/yieldcurve":
         return yield_curve.create_layout(app)
+    elif pathname == "/daqian-dashboard/vanillaoption":
+        return vanilla_option_pricing.create_layout(app)
     else:
         return overview.create_layout(app)
 
@@ -112,6 +115,91 @@ def rerender_sp_graph(col_1,col_2):
     ]
     return {"data": sp_plot_data}
 
+@app.callback(
+    Output('output-result-bsm', 'children'),
+    Output('calculate-bsm', 'style'),
+    Output("bsm-clicks-store", "data"),
+    Input('op-underlying', 'value'),
+    Input('op-strike', 'value'),
+    Input('op-direct-maturity', 'value'),
+    Input('op-volatility', 'value'),
+    Input('op-risk-free-rate', 'value'),
+    Input('op-option-style', 'value'),
+    Input('op-option-type', 'value'),
+    Input('calculate-bsm', 'n_clicks'),
+    Input("bsm-clicks-store", "data"),
+    Input('output-result-bsm', 'children'),
+    prevent_initial_call=True
+)
+def bsm_price_option(s,k,t,sigma,r,style,type,n_clicks,prev_clicks,prev_text):
+    button_style = dict()
+    try:
+        s = float(s)
+        k = float(k)
+        t = float(t)
+        sigma = float(sigma)
+        r = float(r)
+    except:
+        if (n_clicks == prev_clicks) or (n_clicks is None):
+            return  prev_text, button_style, n_clicks
+        else:
+            button_style['background-color'] = '#ed1c24'
+            button_style['pointer-events'] = 'none'
+            return "Wrong Input", button_style, n_clicks
+    
+    if (n_clicks == prev_clicks) or (n_clicks is None):
+        return  prev_text, button_style, n_clicks
+    
+    button_style['background-color'] = '#009b9d'
+    button_style['pointer-events'] = 'none'
+
+    return f'{s}',button_style, n_clicks
+
+@app.callback(
+    Output('output-result-bt', 'children'),
+    Output('calculate-bt', 'style'),
+    Output("bt-clicks-store", "data"),
+    Input('op-underlying', 'value'),
+    Input('op-strike', 'value'),
+    Input('op-direct-maturity', 'value'),
+    Input('op-volatility', 'value'),
+    Input('op-risk-free-rate', 'value'),
+    Input('op-option-style', 'value'),
+    Input('op-option-type', 'value'),
+    Input('op-steps', 'value'),
+    Input('op-knock-in', 'value'),
+    Input('op-knock-out', 'value'),
+    Input('calculate-bt', 'n_clicks'),
+    Input("bt-clicks-store", "data"),
+    Input('output-result-bt', 'children'),
+    prevent_initial_call=True
+)
+def bt_price_option(s,k,t,sigma,r,style,type,N,ki,ko,n_clicks,prev_clicks,prev_text):
+    button_style = dict()
+    try:
+        s = float(s)
+        k = float(k)
+        t = float(t)
+        sigma = float(sigma)
+        r = float(r)
+        N = int(N)
+        ki = float(ki)
+        ko = float(ko)
+    except:
+        if (n_clicks == prev_clicks) or (n_clicks is None):
+            return  prev_text, button_style, n_clicks
+        else:
+            button_style['background-color'] = '#ed1c24'
+            button_style['pointer-events'] = 'none'
+            return "Wrong Input", button_style, n_clicks
+    
+    if (n_clicks == prev_clicks) or (n_clicks is None):
+        return  prev_text, button_style, n_clicks
+    
+    button_style['background-color'] = '#009b9d'
+    button_style['pointer-events'] = 'none'
+
+    return f'{s}',button_style, n_clicks
 
 
 if __name__ == "__main__":

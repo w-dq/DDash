@@ -3,7 +3,6 @@ import plotly.graph_objs as go
 
 from utils import Header, make_dash_table_yc
 import pandas as pd
-import pathlib
 
 def create_layout(app):
     try:

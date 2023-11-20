@@ -61,3 +61,16 @@ def update_yield_curve_data(year_list=[]):
     else:
         return False
     return True
+
+def bsm_option_price(S, K, sigma, T, r, option_type):
+    d1 = (math.log(S / K) + (r + 0.5 * sigma**2) * T) / (sigma * math.sqrt(T))
+    d2 = d1 - sigma * math.sqrt(T)
+
+    if option_type == 'call':
+        option_price = S * norm.cdf(d1) - K * math.exp(-r * T) * norm.cdf(d2)
+    elif option_type == 'put':
+        option_price = K * math.exp(-r * T) * norm.cdf(-d2) - S * norm.cdf(-d1)
+    else:
+        raise ValueError("Invalid option type")
+
+    return option_price

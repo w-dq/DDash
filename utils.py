@@ -50,6 +50,11 @@ def get_menu():
                 href="/daqian-dashboard/yieldcurve",
                 className="tab",
             ),
+            dcc.Link(
+                "Option Pricing",
+                href="/daqian-dashboard/vanillaoption",
+                className="tab",
+            ),
         ],
         className="row all-tabs",
     )
